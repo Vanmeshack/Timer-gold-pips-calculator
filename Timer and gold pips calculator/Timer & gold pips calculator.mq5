@@ -1,4 +1,4 @@
-﻿//+------------------------------------------------------------------+
+//+------------------------------------------------------------------+
 //|                                          CandleTimerWithPips.mq5 |
 //|                                                                  |
 //|                                                                  |
@@ -241,8 +241,13 @@ void DrawFollowPrice(string displayStr)
    int      periodSec = PeriodSeconds(_Period);
    datetime timePos   = time0 + periodSec * shift;
 
-   // Price offset slightly above the current price
-   double priceOffset = SymbolInfoDouble(_Symbol, SYMBOL_POINT) * 100;
+   // Get visible chart price range for proper offset calculation
+   double chartPriceMin = ChartGetDouble(0, CHART_PRICE_MIN);
+   double chartPriceMax = ChartGetDouble(0, CHART_PRICE_MAX);
+   double priceRange    = chartPriceMax - chartPriceMin;
+
+   // Calculate offset as percentage of visible range (2% above price)
+   double priceOffset = priceRange * 0.02;
    double pricePos    = close0 + priceOffset;
 
    // Create or update text object
